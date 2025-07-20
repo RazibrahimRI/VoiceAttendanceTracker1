@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Voice Assistant{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4 class="card-title mb-0">
+                    <i class="fas fa-user-plus me-2"></i>Register
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <small class="form-text text-muted">Choose a unique username</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <small class="form-text text-muted">Choose a strong password</small>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <small class="text-muted">
+                    Already have an account? 
+                    <a href="{{ url_for('login') }}" class="text-decoration-none">Login here</a>
+                </small>
+            </div>
+        </div>
+        
+        <!-- Features Preview -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-star me-2"></i>What You'll Get
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 mb-2">
+                        <i class="fas fa-microphone text-primary me-2"></i>
+                        <small>Voice-controlled attendance marking</small>
+                    </div>
+                    <div class="col-12 mb-2">
+                        <i class="fas fa-tasks text-success me-2"></i>
+                        <small>Hands-free task management</small>
+                    </div>
+                    <div class="col-12 mb-2">
+                        <i class="fas fa-map-marker-alt text-info me-2"></i>
+                        <small>Location-based attendance validation</small>
+                    </div>
+                    <div class="col-12">
+                        <i class="fas fa-chart-bar text-warning me-2"></i>
+                        <small>Analytics and reporting (Admin)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

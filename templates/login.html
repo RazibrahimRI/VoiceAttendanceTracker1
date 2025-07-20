@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Voice Assistant{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4 class="card-title mb-0">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <small class="text-muted">
+                    Don't have an account? 
+                    <a href="{{ url_for('register') }}" class="text-decoration-none">Register here</a>
+                </small>
+            </div>
+        </div>
+        
+        <!-- Demo Instructions -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Getting Started
+                </h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-2"><strong>First time?</strong> Create an account to get started.</p>
+                <p class="mb-2"><strong>Voice Commands:</strong> Use natural language to interact with the system.</p>
+                <p class="mb-0"><strong>Location Required:</strong> Enable location access for attendance marking.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

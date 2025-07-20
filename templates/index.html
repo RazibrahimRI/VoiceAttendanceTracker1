@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Voice Assistant{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Voice Assistant Interface -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-microphone me-2"></i>Voice Assistant
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <div id="voice-status" class="mb-4">
+                    <div class="pulse-container mb-3">
+                        <div id="pulse-circle" class="pulse-circle"></div>
+                    </div>
+                    <h6 id="status-text">Click the microphone to start</h6>
+                    <p id="command-text" class="text-muted">Say commands like "check in", "add task", or "show my tasks"</p>
+                </div>
+                
+                <div class="voice-controls mb-4">
+                    <button id="start-voice" class="btn btn-primary btn-lg me-2">
+                        <i class="fas fa-microphone"></i> Start Listening
+                    </button>
+                    <button id="stop-voice" class="btn btn-secondary btn-lg" disabled>
+                        <i class="fas fa-stop"></i> Stop
+                    </button>
+                </div>
+                
+                <div id="response-area" class="mt-3"></div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <button id="quick-checkin" class="btn btn-outline-success w-100">
+                            <i class="fas fa-map-marker-alt me-2"></i>Check In
+                        </button>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <button id="quick-checkout" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-sign-out-alt me-2"></i>Check Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Today's Attendance -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-calendar-day me-2"></i>Today's Attendance
+                </h6>
+            </div>
+            <div class="card-body">
+                {% if attendance %}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted">Check In:</small><br>
+                            <strong>{{ attendance.check_in_time.strftime('%H:%M') }}</strong>
+                        </div>
+                        {% if attendance.check_out_time %}
+                            <div>
+                                <small class="text-muted">Check Out:</small><br>
+                                <strong>{{ attendance.check_out_time.strftime('%H:%M') }}</strong>
+                            </div>
+                        {% else %}
+                            <span class="badge bg-success">Active</span>
+                        {% endif %}
+                    </div>
+                    {% if attendance.location_name %}
+                        <small class="text-muted d-block mt-2">
+                            <i class="fas fa-map-marker-alt me-1"></i>{{ attendance.location_name[:50] }}...
+                        </small>
+                    {% endif %}
+                {% else %}
+                    <p class="text-muted mb-0">No attendance record for today</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Recent Tasks -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-tasks me-2"></i>Recent Tasks
+                </h6>
+            </div>
+            <div class="card-body">
+                {% if tasks %}
+                    {% for task in tasks %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="flex-grow-1">
+                                <div class="fw-medium">{{ task.title }}</div>
+                                <small class="text-muted">{{ task.created_at.strftime('%m/%d %H:%M') }}</small>
+                            </div>
+                            <span class="badge bg-{{ 'success' if task.status == 'completed' else 'warning' if task.status == 'in_progress' else 'secondary' }}">
+                                {{ task.status.replace('_', ' ').title() }}
+                            </span>
+                        </div>
+                        {% if not loop.last %}<hr class="my-2">{% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted mb-0">No tasks yet</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Voice Commands Help -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-question-circle me-2"></i>Voice Commands
+                </h6>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">
+                    <strong>Attendance:</strong><br>
+                    • "Check in" or "Mark attendance"<br>
+                    • "Check out"<br><br>
+                    
+                    <strong>Tasks:</strong><br>
+                    • "Add task [task name]"<br>
+                    • "Create task [task name]"<br><br>
+                    
+                    <strong>Queries:</strong><br>
+                    • "Show my tasks"<br>
+                    • "Show attendance"<br>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Task Modal -->
+<div class="modal fade" id="addTaskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addTaskForm">
+                    <div class="mb-3">
+                        <label for="taskTitle" class="form-label">Task Title</label>
+                        <input type="text" class="form-control" id="taskTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="taskDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="taskDescription" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="taskPriority" class="form-label">Priority</label>
+                        <select class="form-select" id="taskPriority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveTask">Save Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/voice-assistant.js') }}"></script>
+{% endblock %}
