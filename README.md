@@ -1,2 +1,2 @@
-#Voice Assistant – Attendance & Task Management System
+# Voice Assistant – Attendance & Task Management System
 A voice-controlled Flask web application that enables users to mark attendance and manage tasks using natural language commands. It integrates voice recognition, GPS-based location validation, and an admin dashboard for analytics. The system supports role-based access, task priority levels, real-time charts, and secure authentication. Built with Python (Flask), PostgreSQL, Bootstrap, Web Speech API, and Chart.js.
